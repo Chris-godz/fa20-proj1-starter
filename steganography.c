@@ -61,23 +61,7 @@ int main(int argc, char **argv)
 	Image* oriImage  = readData(filename);
 	Image* transImage = steganography(oriImage);
 	writeData(transImage);
-	Color** colors = transImage->image;
-	for(int i = 0 ;i < transImage->rows; i++)
-		for(int j = 0; j< transImage->cols ;j++)
-		{
-			struct Color * color = colors[j + i * transImage->cols];
-			free(color);
-		}
-	colors = oriImage->image;
-	for(int i = 0 ;i < oriImage->rows; i++)
-		for(int j = 0; j< oriImage->cols ;j++)
-		{
-			struct Color * color = colors[j + i * oriImage->cols];
-			free(color);
-		}
-	free(transImage->image);
-	free(oriImage ->image);
-	free(transImage);
-	free(oriImage);
+	freeImage(oriImage);
+	freeImage(transImage);
 	return 0;
 }

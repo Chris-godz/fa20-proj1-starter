@@ -19,7 +19,6 @@
 #include <inttypes.h>
 #include <string.h>
 #include "imageloader.h"
-
 //Opens a .ppm P3 image file, and constructs an Image object. 
 //You may find the function fscanf useful.
 //Make sure that you close the file with fclose before returning.
@@ -31,8 +30,9 @@ Image *readData(char *filename)
 		perror("fopen\n");
 		exit(-1);
 	}
-	char op[2];int rows,cols,Maxp;
-	fscanf(fp,"%s%d%d%d", op,&rows,&cols,&Maxp);
+
+	char op[2];int cols,rows,Maxp;
+	fscanf(fp,"%s%d%d%d", op,&cols,&rows,&Maxp);
 	if(op[0] != 'P' || op[1] != '3' )
 	{
 		perror("ppm error\n");
@@ -58,6 +58,7 @@ Image *readData(char *filename)
 	ret->image = images;
 	ret->rows = rows;
 	ret->cols = cols;
+	fclose(fp);
 	return ret;
 }
 
@@ -67,7 +68,7 @@ void writeData(Image *image)
 	uint8_t rows = image->rows;
 	uint8_t cols = image->cols;
 	Color** colors = image-> image;
-	printf("%s\n%d %d\n%d\n","P3",rows,cols,255);
+	printf("%s\n%d %d\n%d\n","P3",cols,rows,255);
 	for(int i = 0 ; i<rows; i++)
 	{
 		for(int j = 0 ; j<cols ;j++)
@@ -78,7 +79,6 @@ void writeData(Image *image)
 		putc('\n',stdout);
 	}
 }
-
 //Frees an image
 void freeImage(Image *image)
 {
@@ -91,6 +91,7 @@ void freeImage(Image *image)
 			struct Color * color = colors[j+ i*cols];
 			free(color);
 		}
+	free(colors);
 	free(image);
 }
 	
